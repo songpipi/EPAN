@@ -4,11 +4,11 @@ from tensorboardX import SummaryWriter
 import torch
 from config import Config as C
 import os
-from utils import build_loaders, build_model, train, evaluate, score,score_full, get_lr, save_checkpoint, \
-                  count_parameters, set_random_seed, save_result
+from utils import build_loaders, build_model, train, evaluate, get_lr, save_checkpoint, \
+                  count_parameters, set_random_seed
 
 
-def log_train_2(C, summary_writer, e, loss, lr, teacher_forcing_ratio, scores=None):
+def log_train(C, summary_writer, e, loss, lr, teacher_forcing_ratio, scores=None):
     summary_writer.add_scalar(C.tx_train_loss, loss['total'], e)
     summary_writer.add_scalar(C.tx_train_cross_entropy_loss, loss['cross_entropy'], e)
     summary_writer.add_scalar(C.tx_train_contrastive_attention_loss, loss['contrastive_attention'], e)
@@ -23,7 +23,7 @@ def log_train_2(C, summary_writer, e, loss, lr, teacher_forcing_ratio, scores=No
       print("scores: {}".format(scores))
 
 
-def log_val_2(C, summary_writer, e, loss, test_vid2GTs, test_vid2pred, vid2idx, scores=None):
+def log_val(C, summary_writer, e, loss, test_vid2GTs, test_vid2pred, vid2idx, scores=None):
     summary_writer.add_scalar(C.tx_val_loss, loss['total'], e)
     summary_writer.add_scalar(C.tx_val_cross_entropy_loss, loss['cross_entropy'], e)
     summary_writer.add_scalar(C.tx_val_contrastive_attention_loss, loss['contrastive_attention'], e)
@@ -34,16 +34,6 @@ def log_val_2(C, summary_writer, e, loss, test_vid2GTs, test_vid2pred, vid2idx, 
         for metric in C.metrics_full:
             summary_writer.add_scalar("VAL SCORE/{}".format(metric), scores[metric], e)
         print("scores: {}".format(scores))
-
-        with open(C.score_fpath, 'a') as fout:
-            fout.write("{}:\t".format(e))
-            for k,v in scores.items():
-                v_ = "{:.2f}".format(v*100)
-                scores[k] = v_
-                fout.write("{}\t".format(v_))
-            fout.write("\n")
-        test_save_fpath = os.path.join( C.result_dir, "{}.csv".format(e))
-        save_result(test_vid2pred, test_vid2GTs, test_save_fpath, scores, vid2idx)
 
 def write_logs(C):
     log_path = os.path.join( C.log_dpath, "logs.csv")
@@ -95,7 +85,7 @@ def main():
     print("Pretrained decoder is loading from {}".format(C.pretrained_fpath))    
     model.load_state_dict(torch.load(C.pretrained_fpath),strict=False)
 
-    optimizer2 = torch.optim.Adamax(model.parameters(), lr=C.lr, weight_decay=1e-5)
+    optimizer = torch.optim.Adamax(model.parameters(), lr=C.lr, weight_decay=1e-5)
 
     for e in range(1, C.epochs + 1):
         print()
@@ -105,14 +95,9 @@ def main():
         teacher_forcing_ratio = get_teacher_forcing_ratio(C.decoder.max_teacher_forcing_ratio,
                                                         C.decoder.min_teacher_forcing_ratio,
                                                         e, C.epochs)
-        train_loss = train(e, model, optimizer2, em_train_iter, vocab, teacher_forcing_ratio,
+        train_loss = train(e, model, optimizer, em_train_iter, vocab, teacher_forcing_ratio,
                         C, cross_wei)
-        log_train_2(C, summary_writer, e, train_loss, get_lr(optimizer2), teacher_forcing_ratio)
-
-        """ Test """
-        val_loss = evaluate(model, em_test_iter, vocab, C, cross_wei)
-        val_scores, test_vid2GTs , test_vid2pred, vid2idx = score_full( model, em_test_iter, vocab)
-        log_val_2(C, summary_writer, e, val_loss, test_vid2GTs , test_vid2pred, vid2idx, val_scores)
+        log_train(C, summary_writer, e, train_loss, get_lr(optimizer2), teacher_forcing_ratio)
 
         print("Saving checkpoint at epoch={} to {}".format(e, ckpt_fpath))
         save_checkpoint(ckpt_fpath, e, model, optimizer2)
