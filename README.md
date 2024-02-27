@@ -1,5 +1,5 @@
 # EPAN
-Code of ACM MM 2023 paper [Emotion-Prior Awareness Network for Emotional Video Captioning]. 
+Code of ACM MM 2023 paper [Emotion-Prior Awareness Network for Emotional Video Captioning](https://dl.acm.org/doi/abs/10.1145/3581783.3611726). 
 
 ### Prepare Data
 Datasets can be downloaded from [here](https://mic.tongji.edu.cn/ce/70/c9778a183920/page.htm).
