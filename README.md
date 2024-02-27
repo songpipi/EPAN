@@ -2,9 +2,9 @@
 Code of ACM MM 2023 paper [Emotion-Prior Awareness Network for Emotional Video Captioning]. 
 
 ### Prepare Data
-Datasets can be downloaded from [EmVidCap](https://mic.tongji.edu.cn/ce/70/c9778a183920/page.htm).
+Datasets can be downloaded from [here](https://mic.tongji.edu.cn/ce/70/c9778a183920/page.htm).
 
-The CLIP feature of the MSVD, EmVidCap-S, and EmVidCap-L datasets can be downloaded from [Google Drive](https://drive.google.com/drive/folders/1Pp0H2fEG3eZ4cOpK-Bz_JBts7qp9pwEN?usp=drive_link)
+The CLIP feature of the MSVD, EmVidCap-S, and EmVidCap-L datasets can be downloaded from [Google Drive](https://drive.google.com/drive/folders/1Pp0H2fEG3eZ4cOpK-Bz_JBts7qp9pwEN?usp=drive_link).
 > I refer to [this repo](https://github.com/openai/CLIP) for extracting the CLIP features.
 
 ### Training
