@@ -216,6 +216,14 @@ class Transformer_emo(nn.Module):
         self.classifier2 = nn.Linear(d_outer, emo_num)
         self.emo_num = emo_num
 
+    def padding_seq(self):
+        class_len = [2, 5, 6, 5, 7, 7, 4, 6, 7, 5, 6, 2, 6, 3, 5, 4, 5, 7, 3, 11, 5, 2, 4, 5, 3, 4, 6, 5, 5, 6, 7, 9, 5, 7] # 179 
+        start_id = [0, 2, 7, 13, 18, 25, 32, 36, 42, 49, 54, 60, 62, 68, 71, 76, 80, 85, 92, 95, 106, 111, 113, 117, 122, 125, 129, 135, 140, 145, 151, 158, 167, 172]
+        end_id = [2, 7, 13, 18, 25, 32, 36, 42, 49, 54, 60, 62, 68, 71, 76, 80, 85, 92, 95, 106, 111, 113, 117, 122, 125, 129, 135, 140, 145, 151, 158, 167, 172, 179]
+        index = np.zeros([34,179])
+        for i in range(34):
+            index[i,start_id[i]:end_id[i]] = 1
+        return index
 
     def forward(self, src_seq, trg_seq, src_seq_34):
 
