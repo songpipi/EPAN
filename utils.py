@@ -20,7 +20,6 @@ from models.transformer.Models import Encoder as PhraseEncoder
 from models.visual_encoder import VisualEncoder
 from models.transformer.Models import Transformer_emo
 
-sys.path.append('workspace/EmCap')
 from EmotionEval.getResult import get_result
 from EmotionEval.pycocoevalcap.bleu.bleu import Bleu
 from EmotionEval.pycocoevalcap.rouge.rouge import Rouge
@@ -295,7 +294,7 @@ def score_full( model, data_iter, vocab):
             hypos[vid2idx[vid]] = [ caption ]
     scores = calc_scores(refs, hypos)
     
-    emotion_path = 'workspace/EmCap/EmotionEval/sentiment-words-E/'
+    emotion_path = 'EmotionEval/sentiment-words-E/'
     Acc_sw, Acc_c = get_result(hypos, emotion_path, refs)
     scores['Acc_sw'] = Acc_sw
     scores['Acc_c'] = Acc_c

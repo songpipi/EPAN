@@ -8,23 +8,23 @@ class VocabConfig:
 
 
 class MSVDLoaderConfig:
-    train_caption_fpath = "workspace/EmCap/data/MSVD/metadata/train.csv"
-    val_caption_fpath = "workspace/EmCap/data/MSVD/metadata/val.csv"
-    test_caption_fpath = "workspace/EmCap/data/MSVD/metadata/test.csv"
+    train_caption_fpath = "data/MSVD/metadata/train.csv"
+    val_caption_fpath = "data/MSVD/metadata/val.csv"
+    test_caption_fpath = "data/MSVD/metadata/test.csv"
 
-    em_train_caption_fpath = "dataset/dataset_v2_EmVideo-L/EmVideo_trainval_captions.csv"
-    em_test_caption_fpath = "dataset/dataset_v2_EmVideo-L/EmVideo_test_captions.csv"
+    em_train_caption_fpath = "data/EmVideo-L/EmVideo_trainval_captions.csv"
+    em_test_caption_fpath = "data/EmVideo-L/EmVideo_test_captions.csv"
 
     min_count = 1
     max_caption_len = 15
 
-    split_video_feat_fpath_tpl = "workspace/EmCap/data/{}/features/{}_{}.hdf5"
+    split_video_feat_fpath_tpl = "data/{}/features/{}_{}.hdf5"
     frame_sample_len = 30
 
-    split_video_feat_fpath_tpl_em = "workspace/EmCap/data/EmVideo-L/features/{}_{}.hdf5"
+    split_video_feat_fpath_tpl_em = "data/EmVideo-L/features/{}_{}.hdf5"
 
-    split_negative_vids_fpath = "workspace/EmCap/data/MSVD/metadata/neg_vids_{}.json" 
-    split_negative_emvids_fpath = "workspace/EmCap/data/MSVD/metadata/L_v2v/neg_Emvids_{}_L.json" 
+    split_negative_vids_fpath = "data/MSVD/metadata/neg_vids_{}.json" 
+    split_negative_emvids_fpath = "data/MSVD/metadata/L_v2v/neg_Emvids_{}_L.json" 
 
     num_workers = 1
 

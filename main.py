@@ -52,7 +52,7 @@ def get_em_wei(C, vocab):
     weights = torch.ones(vocab.n_vocabs)
     em_wei = weights + C.em_wei
     indexs = []
-    em_words = open('workspace/EmCap/EmotionEval/em_words.txt','r')
+    em_words = open('EmotionEval/179_words.txt','r')
     for idx,ddd in enumerate(em_words):
         em_word = ddd.split()[0]
         index = vocab.word2idx[em_word]
