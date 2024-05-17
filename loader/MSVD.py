@@ -13,10 +13,10 @@ class MSVDVocab(CustomVocab):
         df = df[pd.notnull(df['Description'])]
         captions = df['Description'].values
 
-        df_s = pd.read_csv('dataset/dataset_v1(EmVideo-S)/EmVideo_trainval_captions.csv')
+        df_s = pd.read_csv('data/EmVideo-S/EmVideo_trainval_captions.csv')
         style_s = df_s['EmCaptions'].values
 
-        df_l = pd.read_csv('dataset/dataset_v2_EmVideo-L/EmVideo_trainval_captions.csv','\t')
+        df_l = pd.read_csv('data/EmVideo-L/EmVideo_trainval_captions.csv','\t')
         style_l = df_l['EmCaptions'].values
 
         captions = np.concatenate((captions, style_s, style_l),0)
@@ -41,7 +41,7 @@ class MSVDDataset(CustomDataset):
             for video_id, caption in df_l.values:
                 self.captions[video_id].append(caption)
 
-            file1 = open('dataset/MSVD/youtube_mapping.txt','r')
+            file1 = open('data/MSVD/youtube_mapping.txt','r')
             fpth2vid = {}
             for line in file1.readlines():
                 line = line.strip()
@@ -49,9 +49,9 @@ class MSVDDataset(CustomDataset):
                 fpth = line.split(' ')[1]
                 fpth2vid[fpth] = vid
             if self.split == 'train':
-                df_s = pd.read_csv('dataset/dataset_v1(EmVideo-S)/EmVideo_trainval_captions.csv')   
+                df_s = pd.read_csv('data/EmVideo-S/EmVideo_trainval_captions.csv')   
             else:
-                df_s = pd.read_csv('dataset/dataset_v1(EmVideo-S)/EmVideo_test_captions.csv')            
+                df_s = pd.read_csv('data/EmVideo-S/EmVideo_test_captions.csv')            
             df_s = df_s[[ 'VideoID','EmCaptions']]
             df_s = df_s[pd.notnull(df_s['EmCaptions'])]
             for video_id, caption in df_s.values:
@@ -63,7 +63,7 @@ class MSVDDataset(CustomDataset):
     def load_video_feats(self):
         models = [ self.C.vis_encoder.app_feat, self.C.vis_encoder.mot_feat  ]
         for model in models:
-            if len(self.caption_fpath.split('/')[-1]) < 10:
+            if len(self.caption_fpath.split('/')[-1]) < 10: # factual captions
                 fpath = self.C.loader.split_video_feat_fpath_tpl.format(self.C.corpus, model, self.split)
                 fin = h5py.File(fpath, 'r')
                 for vid in fin.keys():
@@ -77,7 +77,7 @@ class MSVDDataset(CustomDataset):
                     self.video_feats[vid][model] = feats
                 fin.close()
 
-            else: 
+            else:   # emotional captions
                 fpath = self.C.loader.split_video_feat_fpath_tpl_em.format(model, self.split)
                 fin = h5py.File(fpath, 'r')
                 for vid in fin.keys():

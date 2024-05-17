@@ -32,7 +32,7 @@ class CustomVocab(object):
 
         self.em_vocabs = []
         self.em_word2idx = {}
-        em_words = open('workspace/EmCap/EmotionEval/179_words.txt','r')
+        em_words = open('EmotionEval/179_words.txt','r')
         for idx,ddd in enumerate(em_words):
             em_word = ddd.split()[0]
             self.em_vocabs.append(em_word)
@@ -41,7 +41,7 @@ class CustomVocab(object):
 
         self.em2idx = {}
         self.em_cates = []
-        ems = open('workspace/EmCap/EmotionEval/34_emotion.txt','r')
+        ems = open('EmotionEval/34_emotion.txt','r')
         for idx,ddd in enumerate(ems):
             em = ddd.split()[0]
             self.em_cates.append(em)
@@ -55,7 +55,7 @@ class CustomVocab(object):
     def load_pretrained_embedding(self, name):
         if name == 'GloVe':
             # 400,000 words, 300 dims
-            with open("workspace/EmCap/data/Embeddings/GloVe/GloVe_300.json", 'r') as fin:
+            with open("data/Embeddings/GloVe/GloVe_300.json", 'r') as fin:
                 w2v = json.load(fin)
         elif name == 'Word2Vec':
             w2v = gensim.models.KeyedVectors.load_word2vec_format(
@@ -141,7 +141,7 @@ class CustomDataset(Dataset):
         self.captions = defaultdict(lambda: [])
         
         self.em_set = []
-        em_words = open('workspace/EmCap/EmotionEval/179_words.txt','r')
+        em_words = open('EmotionEval/179_words.txt','r')
         for ddd in em_words:
             em_word = ddd.split()[0]
             self.em_set.append(em_word)
@@ -177,7 +177,7 @@ class CustomDataset(Dataset):
 
     def word2emo(self):
         self.word_to_34class = {}
-        main_path = 'workspace/EmCap/EmotionEval/sentiment-words-E/'
+        main_path = 'EmotionEval/sentiment-words-E/'
         dir = os.listdir(main_path) #34 emotions
         dir.sort()
         for filename in dir:
@@ -202,11 +202,11 @@ class CustomDataset(Dataset):
         neg_vids_fpath = self.C.loader.split_negative_vids_fpath.format(self.split)
         neg_emvids_fpath = self.C.loader.split_negative_emvids_fpath.format(self.split)
 
-        if len(self.caption_fpath.split('/')[-1]) < 10:
+        if len(self.caption_fpath.split('/')[-1]) < 10:  # factual captions
             with open(neg_vids_fpath, 'r') as fin:
                 self.vid2neg_vids = json.load(fin)
         else:
-            with open(neg_emvids_fpath, 'r') as fin:
+            with open(neg_emvids_fpath, 'r') as fin:  # emotional captions
                 self.vid2neg_vids = json.load(fin)
             
             # K = 10
